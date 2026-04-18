@@ -1,35 +1,30 @@
+require('dotenv').config()
 const express = require('express')
+const connectDB = require ("./Config/database")
 const app = express()
-
-const {adminAuth, userAuth} = require("./Middlewares/auth")
-app.use("/admin" , adminAuth);
-
-app.get("/getUserData", (req, res) => {
-    //Logic of DB call
-try{
-    throw new Error("dbbnakbd")
-    res.send("User Data Sent!!")
-
+const User = require("./models/user")
+app.post("/signup", async (req, res) => {
+// creating a new instance of the User Model
+const user = new User({
+    firstName: "Dev",
+    lastName : "Raj",
+    emailId : "devvib@gmail.com",
+    password : "ijhajhd9",
+})
+try {
+await user.save()
+res.send("User added successfully!!")
+} catch(err){
+    res.status(40).send("User NOY ADDED !!!"+ errr.message)
 }
-catch (err){
-    res.status(500).send("Some error contact support team")
-}}
-)
 
-app.get("/user", userAuth, (req, res) => {
-    // console.log("Save data to DB!")
-    res.send("User Data Send !!")
 })
-app.get("/admin/getAllData",(req, res) => {
-    // console.log("Save data to DB!")
-    res.send("All data sent")
+
+connectDB().then (() =>{
+    console.log("database conncted✅")
+    app.listen(3000,() => {
+        console.log("The server is Running at PORT 3000")
+    })
+}).catch(err=> {
+    console.log("database not conncted❌", err.message)
 })
-app.listen(3000,() => {
-    console.log("The server is Running at PORT 3000")
-    app.use("/", (err, req, res, next) => {
-        if (err) {
-            res.staus(500).send("Something went wrong")
-        }
-    })
-    })
-    

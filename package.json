@@ -4,6 +4,7 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "g": "^2.0.1",
+    "mongoose": "^9.4.1",
     "nodemon": "^3.1.14"
   },
   "name": "develovers",
@@ -11,7 +12,7 @@
   "description": "A modern, feature-rich dating application specifically designed for developers and tech professionals to find meaningful connections.",
   "main": "index.js",
   "scripts": {
-    "dev":"npx nodemon backend/src/app.js",
+    "dev": "npx nodemon backend/src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -19,4 +20,3 @@
   "license": "ISC",
   "type": "commonjs"
 }
- 
