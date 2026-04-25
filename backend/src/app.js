@@ -7,6 +7,18 @@ app.use(express.json())
 app.post("/signup", async (req, res) => {
 // creating a new instance of the User Model
 console.log(req.body)
+})
+
+app.get("/user", async (req, res) => {
+    const userEmail = req.body.userEmail
+    try{
+        const users = await User.find({emailId: userEmail})
+        res.send(users);
+    }
+    catch(err){
+        res.status(400).send("Something went wrong")
+    }
+})
 // const user = new User({
 //     firstName: "Dev",
 //     lastName : "Raj",
