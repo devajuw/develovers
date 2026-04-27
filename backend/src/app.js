@@ -12,12 +12,13 @@ console.log(req.body)
 app.get("/user", async (req, res) => {
     const userEmail = req.body.userEmail
     try{
-        const users = await User.find({emailId: userEmail})
+        const users = await User.find({})
+        //empty filter means searching all users
         res.send(users);
     }
     catch(err){
         res.status(400).send("Something went wrong")
-    }
+    } 
 })
 // const user = new User({
 //     firstName: "Dev",
