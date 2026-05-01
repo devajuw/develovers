@@ -4,37 +4,71 @@ const connectDB = require ("./Config/database")
 const app = express()
 const User = require("./models/user")
 app.use(express.json())
+
+// User SignUP
+
 app.post("/signup", async (req, res) => {
-// creating a new instance of the User Model
-console.log(req.body)
+  try {
+    const user = new User(req.body)
+    await user.save()
+    res.send("User added successfully!!")
+  } catch(err){
+    res.status(400).send("User NOT ADDED: " + err.message)
+  }
 })
 
-app.get("/user", async (req, res) => {
-    const userEmail = req.body.userEmail
-    try{
-        const users = await User.find({})
-        //empty filter means searching all users
-        res.send(users);
-    }
-    catch(err){
-        res.status(400).send("Something went wrong")
-    } 
-})
-// const user = new User({
-//     firstName: "Dev",
-//     lastName : "Raj",
-//     emailId : "devvib@gmail.com",
-//     password : "ijhajhd9",
-// })
-// try {
-// await user.save()
-// res.send("User added successfully!!")
-// } catch(err){
-//     res.status(40).send("User NOY ADDED !!!"+ errr.message)
-// }
+app.get("/GetUser", async (req, res) => {
+  const userEmail = req.query.userEmail
+  try {
+    const user = await User.find({})
+    //empty filter means searching all users
+    if (!user || user.length === 0)
+      res.status(400).send("User not found")
+    else
+      res.send(user);
+    console.log(user);
+  }
+  
+  catch (err) {
+    res.status(400).send("Something went wrong: " + err.message)
+  }
+});
 
-// res.send("Signup route is working")
-})
+
+// deleting the user
+
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId
+  try {
+    const user = await User.findByIdAndDelete(userId);
+    res.send("User Deleted Successfully")
+  }
+  catch (err) {
+    res.status(400).send("Something went wrong")
+  }
+});
+
+// UPDATE the data of the user
+
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body
+  console.log(data)
+  try {
+    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+      returnDocument: "before",
+      runValidators: true});
+    console.log(user)
+    res.send("User Updated Successfully")
+  }
+  catch (err) {
+    res.status(400).send("Update Failed"+err.message)
+  }
+});
+
+
+
+
 
 connectDB().then (async () =>{
     console.log("database conncted✅")
