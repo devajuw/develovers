@@ -23,4 +23,4 @@ if( !isUserAuthorised){
 module.exports = {
     adminAuth,
     userAuth,
-}
+}   
