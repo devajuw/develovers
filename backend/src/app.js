@@ -3,17 +3,19 @@ const express = require("express");
 const connectDB = require("./Config/database");
 const app = express();
 const User = require("./models/user");
+const { validateSignUpData } = require("./Utils/validation");
 app.use(express.json());
 
 // User SignUP
-
 app.post("/signup", async (req, res) => {
   try {
+    // validate the data
+    validateSignUpData(req);
     const user = new User(req.body);
     await user.save();
     res.send("User added successfully!!");
   } catch (err) {
-    res.status(400).send("User NOT ADDED: " + err.message);
+    res.status(400).send("Error : " + err.message);
   }
 });
 
@@ -45,17 +47,16 @@ app.delete("/user", async (req, res) => {
 // UPDATE the data of the user
 
 app.patch("/user/:userId", async (req, res) => {
-  
   const userId = req.params?.userId;
   const data = req.body;
   const ALLOWED_UPDATES = ["userId", "photoUrl", "about", "gender", "age"];
   try {
-  const isUpdateAllowed = Object.keys(data).every((k) =>
-    ALLOWED_UPDATES.includes(k)
-  );
-  if (!isUpdateAllowed) {
-    throw new Error("Update not allowed")
-  }
+    const isUpdateAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k),
+    );
+    if (!isUpdateAllowed) {
+      throw new Error("Update not allowed");
+    }
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
       returnDocument: "before",
       runValidators: true,
